@@ -528,48 +528,68 @@ Hint: A list of valid glob Qualifiers can be found in zshexpn(1). See “man 1 z
 
 A list of valid glob Qualifiers can be found in zshexpn(1). Note: **/ is equivalent to (*/)#! For example:
 
+```
 $ print (*/)#zsh_us.ps
 zsh-4.2.3/Doc/zsh_us.ps
 $ print **/zsh_us.ps
 zsh-4.2.3/Doc/zsh_us.ps
+```
 
-# Search for `README' in all Subdirectories
-  $ ls -l **/README
+Search for `README' in all Subdirectories
 
-# find directories that contain both "index.php" and "index.html", or in
-# general, directories that contain more than one file matching "index.*"
+```
+$ ls -l **/README
+```
+
+find directories that contain both "index.php" and "index.html", or in
+general, directories that contain more than one file matching "index.*"
+
+```
   $ ls **/*(D/e:'[[ -e $REPLY/index.php && -e $REPLY/index.html ]]':)
   # or
   $ ls **/*(D/e:'l=($REPLY/index.*(N)); (( $#l >= 2 ))':)
+```
 
-# Find command to search for directory name instead of basename
-  $ print -rl /**/*~^*/path(|/*)
-  # or - without Zsh
-  $ find / | grep -e /path/ -e '/path$'
+Find command to search for directory name instead of basename
+```
+$ print -rl /**/*~^*/path(|/*)
+# or - without Zsh
+$ find / | grep -e /path/ -e '/path$'
+```
 
-# Print he path of the directories holding the ten biggest C regular files
-# in the current directory and subdirectories.
-  $ print -rl -- **/*.c(D.OL[1,10]:h) | sort -u
+Print he path of the directories holding the ten biggest C regular files
+in the current directory and subdirectories.
+```
+$ print -rl -- **/*.c(D.OL[1,10]:h) | sort -u
+```
 
-# Find files with size == 0 and send a mail
-  $ files=(**/*(ND.L0m+0m-2))
+Find files with size == 0 and send a mail
+```
+$ files=(**/*(ND.L0m+0m-2))
   > (( $#files > 0 )) && print -rl -- $files | \
     mailx -s "empty files" foo@bar.tdl
+```
 
-# recursive chmod
-  $ chmod 700 **/(.) # Only files
-  $ chmod 700 **/(/) # Only directories
+recursive chmod
+```
+$ chmod 700 **/(.) # Only files
+$ chmod 700 **/(/) # Only directories
+```
 
-# print out all of the files in that directory in 2 columns
-  $ print -rC2 -- ${1:[...]}/*(D:t)
-#            ^- number ob columns
+print out all of the files in that directory in 2 columns
+```
+$ print -rC2 -- ${1:[...]}/*(D:t)
+#          ^- number ob columns
+
 # or - if you feel concerned about special characters - use
   $ list=(${1:[...]}/*(ND:t))
   $ (($#list)) && print -rC2 -- ${(V)list}
+```
 
-# Search all files in /home/*/*-mail/ with a setting ``chmod -s'' flag
-# (recursive, include  dotfiles) remove the setgid/setuid flag and print
-# a message
+Search all files in /home/*/*-mail/ with a setting ``chmod -s'' flag
+(recursive, include  dotfiles) remove the setgid/setuid flag and print
+a message
+```
   $ chmod -s /home/*/*-mail(DNs,S) /home/*/*-mail/**/*(DNs,S))
 # or with a small script
   $ for file (/home/*/*-mail(DNs,S) /home/*/*-mail/**/*(DNs,S)) {
@@ -579,37 +599,57 @@ zsh-4.2.3/Doc/zsh_us.ps
 # or use ``zargs'' (require autoload zargs) prevent the arg list too
 # long error
   $ zargs /home/*/*-mail(DNs,S) /home/*/*-mail/**/*(DNs,S)) -- chmod -s
+```
 
-# List files beginning at `foo23' upwards (foo23, foo24, foo25, ..)
-  $ ls -l foo<23->
+List files beginning at `foo23' upwards (foo23, foo24, foo25, ..)
+```
+$ ls -l foo<23->
+```
 
-# get all files that begin with the date strings from June 4 through
-# June 9 of 2004
-  $ ls -l 200406{04..10}*(N)
+get all files that begin with the date strings from June 4 through
+June 9 of 2004
+
+```
+$ ls -l 200406{04..10}*(N)
 # or if they are of the form 200406XX (require ``setopt extended_glob''
-  $ ls -l 200306<4-10>.*
+$ ls -l 200306<4-10>.*
+```
 
-# remove spaces from filenames
-  $ for a in ./**/*\ *(Dod); do mv $a ${a:h}/${a:t:gs/ /_}; done
+remove spaces from filenames
 
-# Show only all *.c and *.h - Files
-  $ ls -l *.(c|h)
+```
+$ for a in ./**/*\ *(Dod); do mv $a ${a:h}/${a:t:gs/ /_}; done
+```
 
-# Show only all *.c - files and ignore `foo.c'
-  $ ls *.c~foo.c
+Show only all *.c and *.h - Files
+```
+$ ls -l *.(c|h)
+```
 
-# show data to *really* binary format
-  $ zsh -ec 'while {} {printf %.8x $n;repeat 8 \
-  > {read -ku0 a printf \ %.8d $(([##2]#a))};print;((n+=8))}' < binary
+Show only all *.c - files and ignore `foo.c'
+```
+$ ls *.c~foo.c
+```
 
-# Show only world-readable files
-  $ ls -l *(R)
+show data to *really* binary format
+```
+$ zsh -ec 'while {} {printf %.8x $n;repeat 8 \
+> {read -ku0 a printf \ %.8d $(([##2]#a))};print;((n+=8))}' < binary
+```
 
-# List files in the current directory are not writable by the owner
-  $ print -l ~/*(ND.^w)
 
-# find and delete the files which are older than a given parameter
-# (seconds/minutes/hours)
+Show only world-readable files
+```
+$ ls -l *(R)
+```
+
+List files in the current directory are not writable by the owner
+```
+$ print -l ~/*(ND.^w)
+```
+
+find and delete the files which are older than a given parameter (seconds/minutes/hours)
+```
   # deletes all regular file in /Dir that are older than 3 hours
    $ rm -f /Dir/**/*(.mh+3)
   # deletes all symlinks in /Dir that are older than 3 minutes
@@ -628,91 +668,149 @@ zsh-4.2.3/Doc/zsh_us.ps
    $ zmodload zsh/files ; rm -f **/*(mh+6)
   or use the zargs function:
    $ autoload zargs ; zargs **/*(mh+6) -- rm -f
+```
 
-# A User's Guide to the Z-Shell /5.9: Filename Generation and Pattern
-# Matching find all files in all subdirectories, searching recursively,
-# which have a given name, case insensitive, are at least 50 KB large,
-# no more than a week old and owned by the root user, and allowing up
-# to a single error in the spelling of the name. In fact, the required
-# expression looks like this:
+
+A User's Guide to the Z-Shell /5.9: Filename Generation and Pattern
+Matching find all files in all subdirectories, searching recursively,
+which have a given name, case insensitive, are at least 50 KB large,
+no more than a week old and owned by the root user, and allowing up
+to a single error in the spelling of the name. In fact, the required
+expression looks like this:
+
+```
   $ ls **/(#ia1)name(LK+50mw-1u0)
+```
 
-# Change the UID from 102 to 666
-  $ chown 666 **/*(u102)
+Change the UID from 102 to 666
+```
+$ chown 666 **/*(u102)
+```
 
-# List all files which have not been updated since last 10 hours
-  $ print -rl -- *(Dmh+10^/)
+List all files which have not been updated since last 10 hours
+```
+$ print -rl -- *(Dmh+10^/)
+```
 
-# delete only the oldest file in a directory
-  $ rm ./*filename*(Om[1])
-
-# Sort the output from `ls -l' by file size
+delete only the oldest file in a directory
+```
+$ rm ./*filename*(Om[1])
+```
+Sort the output from `ls -l' by file size
+```
   $ ls -fld *(OL)
+```
+find most recent file in a directory
+```
+$ setopt dotglob ; print directory/**/*(om[1])
+```
 
-# find most recent file in a directory
-  $ setopt dotglob ; print directory/**/*(om[1])
+Show only empty files which nor `group' or `world writable'
+```
+$ ls *(L0f.go-w.)
+```
+Find - and list - the ten newest files in directories and subdirs. (recursive)
+```
+$ print -rl -- **/*(Dom[1,10])
+```
 
-# Show only empty files which nor `group' or `world writable'
-  $ ls *(L0f.go-w.)
+Print only 5 lines by "ls" command (like ``ls -laS | head -n 5'').
+```
+$ ls -fl *(DOL[1,5])
+```
 
-# Find - and list - the ten newest files in directories and subdirs.
-# (recursive)
-  $ print -rl -- **/*(Dom[1,10])
+Display the 5-10 last modified files.
+```
+$ print -rl -- /path/to/dir/**/*(D.om[5,10])
+```
 
-# Print only 5 lines by "ls" command (like ``ls -laS | head -n 5'').
-  $ ls -fl *(DOL[1,5])
 
-# Display the 5-10 last modified files.
-  $ print -rl -- /path/to/dir/**/*(D.om[5,10])
+Find all files without a valid owner.
+```
+$ chmod someuser /**/*(D^u:${(j.:u:.)${(f)"$(</etc/passwd)"}%%:*}:)
+```
 
-# Find all files without a valid owner.
-  $ chmod someuser /**/*(D^u:${(j.:u:.)${(f)"$(</etc/passwd)"}%%:*}:)
+Find all the empty directories in a tree.
+```
+$ for f in ***/*(/l2); do foo=($f/*(N)); [[ -z $foo ]] && print $f; done
+```
+Note:Since Zsh 4.2.1 the glob qualifier F indicates a non-empty directory.
+Hence *(F) indicates all subdirectories with entries, *(/^F) means all
+subdirectories with no entries.
+```
+$ ls -ld *(/^F)
+```
+Remove empty directories afterwards.
+```
+$ rmdir ./**/*(/od) 2> /dev/null
+```
+Show only files which are owned by group `users'.
+```
+$ ls -l *(G[users])
+```
 
-# Find all the empty directories in a tree.
-  $ for f in ***/*(/l2); do foo=($f/*(N)); [[ -z $foo ]] && print $f; done
-# Note:Since Zsh 4.2.1 the glob qualifier F indicates a non-empty directory.
-# Hence *(F) indicates all subdirectories with entries, *(/^F) means all
-# subdirectories with no entries.
-  $ ls -ld *(/^F)
-
-# Remove empty directories afterwards.
-  $ rmdir ./**/*(/od) 2> /dev/null
-
-# Show only files which are owned by group `users'.
-  $ ls -l *(G[users])
-
-Modifiers usage
+# Modifiers usage
 
 Modifiers are a powerful mechanism that let you modify the results returned by parameter, filename and history expansion. See zshexpn(1) for details.
 
-# NOTE: Zsh 4.3.4 needed!
+NOTE: Zsh 4.3.4 needed!
+```
   $ autoload -U age
-# files modified today
-  $ print *(e:age today now:)
-# files modified since 5 pm
-  $ print *(e-age 17:00 now-)
-# ... since 5 o'clock yesterda
-  $ print *(e-age yesterday,17:00 now-)
-# ... from last Christmas before today
-  $ print *(e-age 2006/12/25 today-)
-# ... before yesterday
-  $ print *(e-age 1970/01/01 yesterday-)
-# all files modified between the start of those dates
-  $ print *(e:age 2006/10/04 2006/10/09:)
-# all files modified on that date
-  $ print *(e:age 2006/10/04:)
-# Supply times.
-  $ print *(e-age 2006/10/04:10:15 2006/10/04:10:45-)
+```
 
-# Remove a trailing pathname component, leaving the head. This works like
-# `dirname'.
-  $ echo =ls(:h)
+files modified today
+```
+$ print *(e:age today now:)
+```
+
+files modified since 5 pm
+
+```
+$ print *(e-age 17:00 now-)
+```
+
+... since 5 o'clock yesterday
+``` 
+$ print *(e-age yesterday,17:00 now-)
+```
+
+from last Christmas before today
+```
+$ print *(e-age 2006/12/25 today-)
+```
+
+before yesterday
+
+```
+$ print *(e-age 1970/01/01 yesterday-)
+```
+
+all files modified between the start of those dates
+```
+$ print *(e:age 2006/10/04 2006/10/09:)
+```
+
+all files modified on that date
+```
+$ print *(e:age 2006/10/04:)
+```
+Supply times.
+```
+$ print *(e-age 2006/10/04:10:15 2006/10/04:10:45-)
+```
+
+Remove a trailing pathname component, leaving the head. This works like `dirname'.
+```
+$ echo =ls(:h)
   /bin
+```
 
-# Remove all leading pathname components, leaving the tail. This works
-# like `basename'.
+Remove all leading pathname components, leaving the tail. This works like `basename'.
+```
   $ echo =ls(:t)
   ls
+```
+
 
 # Remove the suffix from each file (*.sh in this example)
    $f:e is $f file extension
