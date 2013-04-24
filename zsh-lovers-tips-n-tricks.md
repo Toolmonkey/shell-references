@@ -20,7 +20,7 @@ SHELL-SCRIPTING
 
 This section provides some examples for often needed shellscript-stuff. Notice that you should not use otherwise most examples won’t work.
 Parse options in shellscripts. Example taken from ZWS by Adam Chodorowski (http://www.chodorowski.com/projects/zws/):
-
+```zsh
 parse_options()
 {
     o_port=(-p 9999)
@@ -41,6 +41,7 @@ parse_options()
 }
 # now use the function:
 parse_options $*
+```
 
 EXAMPLES
 
@@ -49,19 +50,24 @@ ALIASES
 
 Suffix aliases are supported in zsh since version 4.2.0. Some examples:
 
+```
 alias -s tex=vim
 alias -s html=w3m
 alias -s org=w3m
+```
 
 Now pressing return-key after entering foobar.tex starts vim with foobar.tex. Calling a html-file runs browser w3m. www.zsh.org and pressing enter starts w3m with argument www.zsh.org.
 Global aliases can be used anywhere in the command line. Example:
 
+```
 $ alias -g C='| wc -l'
 $ grep alias ~/.zsh/* C
 443
+```
 
 Some more or less useful global aliases (choose whether they are useful or not for you on your own):
 
+```
 alias -g ...='../..'
 alias -g ....='../../..'
 alias -g .....='../../../..'
@@ -101,6 +107,7 @@ alias -g X0G='| xargs -0 egrep'
 alias -g X0='| xargs -0'
 alias -g XG='| xargs egrep'
 alias -g X='| xargs'
+```
 
 COMPLETION
 
@@ -108,53 +115,74 @@ See also man 1 zshcompctl zshcompsys zshcompwid. zshcompctl is the old style of 
 
 Some functions, like _apt and _dpkg, are very slow. You can use a cache in order to proxy the list of results (like the list of available debian packages) Use a cache:
 
+```
 zstyle ':completion:*' use-cache on
 zstyle ':completion:*' cache-path ~/.zsh/cache
+```
 
 Prevent CVS files/directories from being completed:
 
+```
 zstyle ':completion:*:(all-|)files' ignored-patterns '(|*/)CVS'
 zstyle ':completion:*:cd:*' ignored-patterns '(*/)#CVS'
+```
 
 Fuzzy matching of completions for when you mistype them:
 
+```
 zstyle ':completion:*' completer _complete _match _approximate
 zstyle ':completion:*:match:*' original only
 zstyle ':completion:*:approximate:*' max-errors 1 numeric
+```
 
 And if you want the number of errors allowed by _approximate to increase with the length of what you have typed so far:
 
+```
 zstyle -e ':completion:*:approximate:*' \
         max-errors 'reply=($((($#PREFIX+$#SUFFIX)/3))numeric)'
+```
 
 Ignore completion functions for commands you don’t have:
 
+```
 zstyle ':completion:*:functions' ignored-patterns '_*'
+```
 
 With helper functions like:
 
+```
 xdvi() { command xdvi ${*:-*.dvi(om[1])} }
+```
 
 you can avoid having to complete at all in many cases, but if you do, you might want to fall into menu selection immediately and to have the words sorted by time:
 
+```
 zstyle ':completion:*:*:xdvi:*' menu yes select
 zstyle ':completion:*:*:xdvi:*' file-sort time
+```
 
 Completing process IDs with menu selection:
 
+```
 zstyle ':completion:*:*:kill:*' menu yes select
 zstyle ':completion:*:kill:*'   force-list always
+```
 
 If you end up using a directory as argument, this will remove the trailing slash (usefull in ln)
 
+```
 zstyle ':completion:*' squeeze-slashes true
+```
 
 cd will never select the parent directory (e.g.: cd ../<TAB>):
 
+```
 zstyle ':completion:*:cd:*' ignore-parents parent pwd
+```
 
 Another method for quick change directories. Add this to your ~/.zshrc, then just enter “cd …./dir”
 
+```
 rationalise-dot() {
   if [[ $LBUFFER = *.. ]]; then
     LBUFFER+=/..
@@ -164,11 +192,13 @@ rationalise-dot() {
 }
 zle -N rationalise-dot
 bindkey . rationalise-dot
+```
 
 UNSORTED/MISC examples
 
 Hint: A list of valid glob Qualifiers can be found in zshexpn(1). See “man 1 zshexpn | less -p” Qualifiers for details.
 
+```
 # Get the names of all files that *don't* match a pattern *anywhere* on the
 # file (and without ``-L'' because its GNUish)
   $ print -rl -- *(.^e{'grep -q pattern $REPLY'})
@@ -492,6 +522,7 @@ Hint: A list of valid glob Qualifiers can be found in zshexpn(1). See “man 1 z
   > else
   >    echo "Not a Linux."
   > fi
+```
 
 (Recursive) Globbing - Examples
 
