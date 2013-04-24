@@ -20,7 +20,7 @@ SHELL-SCRIPTING
 
 This section provides some examples for often needed shellscript-stuff. Notice that you should not use otherwise most examples won’t work.
 Parse options in shellscripts. Example taken from ZWS by Adam Chodorowski (http://www.chodorowski.com/projects/zws/):
-```zsh
+```bash
 parse_options()
 {
     o_port=(-p 9999)
